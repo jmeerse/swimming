@@ -28,9 +28,11 @@ df$ave_split <- rowMeans(df[c(11:26)])
 
 hist(df$Split_50)
 
-df_long %>% ggplot(aes(x = split_time, y = lap)) + geom_boxplot()
+
 
 df_long <- gather(df, lap, split_time, Split_50:Split_1500, factor_key=TRUE) #make a long dataframe
+
+df_long %>% ggplot(aes(x = split_time, y = lap)) + geom_boxplot()
 
 df_long$lapnum <- case_when(df_long$lap == "Split_50" ~ 1,
                             df_long$lap == "Split_100" ~ 2,
@@ -70,7 +72,7 @@ w1500f22 <- df_long %>%
   filter(grepl("Women 1500", Event))
 
 
-#take out slow heats and laps beyond race length
+#take out laps beyond race length
 w800f22 <- w800f22 %>% filter(lapnum < 17)
 
 #line plot colored by finish place
@@ -288,7 +290,7 @@ df_long %>% filter(Place < 6) %>%
   labs(color = "Place",
        fill = "Place")
 
-
+#### Not sure anything below works anymore- but might need for coding examples ####
 #time behind Ledeky?
 
 ledeky <-  df_long %>% filter(Name == "LEDECKY Katie")
