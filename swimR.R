@@ -15,7 +15,7 @@ library(ggridges)
 file <- "jrnats22.pdf"
 
 
-
+#can import df_long instead of reading pdf - import the csv, then start at line 68
 df <- file %>% 
   SwimmeR::read_results() %>% 
   swim_parse(splits = TRUE, split_length = 50)
@@ -64,6 +64,7 @@ df_long$lapnum <- case_when(df_long$lap == "Split_50" ~ 1,
                             df_long$lap == "Split_1400" ~ 28,
                             df_long$lap == "Split_1450" ~ 29,
                             df_long$lap == "Split_1500" ~ 30)
+
 
 w800f22 <- df_long %>% 
   filter(grepl("Women 800", Event))
