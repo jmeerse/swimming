@@ -2,21 +2,21 @@
 
 install.packages("flextable")
 install.packages("SwimmeR")
-devtools::install_github("gpilgrim2670/JumpeR")
+devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)
+
 install.packages("transformr")
 
 library(SwimmeR)
 library(tidyverse)
-library(JumpeR)
 library(flextable)
 library(gganimate)
 library(transformr)
 library(ggridges)
-file <- "jrnats22.pdf"
+file <- "jreast21.pdf" #change file name for each set of results
 
 
 #can import df_long instead of reading pdf - import the csv, then start at line 68
-df <- file %>% 
+dfjr21 <- file %>% 
   SwimmeR::read_results() %>% 
   swim_parse(splits = TRUE, split_length = 50)
 
