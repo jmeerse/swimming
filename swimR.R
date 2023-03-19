@@ -82,18 +82,18 @@ df_long$lapnum <- case_when(df_long$lap == "Split_50" ~ 1,
 
 
 
-w800f22 <- df_long %>% 
+w800f <- df_long %>% 
   filter(grepl("Women 800", Event))
 
-w1500f22 <- df_long %>% 
+w1500f <- df_long %>% 
   filter(grepl("Women 1500", Event))
 
 
 #take out laps beyond race length
-w800f22 <- w800f22 %>% filter(lapnum < 17)
+w800f <- w800f %>% filter(lapnum < 17)
 
 #line plot colored by finish place
-w800f22 %>% ggplot(aes(x = lapnum, 
+w800f %>% ggplot(aes(x = lapnum, 
                      y = split_time, 
                      group = Name,
                      color = Place)) +
@@ -101,7 +101,7 @@ w800f22 %>% ggplot(aes(x = lapnum,
   geom_label(aes(label = Name, x = 8, y = 30)) +
   facet_wrap(~Place)
 
-w1500f22 %>% ggplot(aes(x = lapnum, 
+w1500f %>% ggplot(aes(x = lapnum, 
                        y = split_time, 
                        group = Name,
                        color = Place)) +
@@ -118,21 +118,21 @@ df_long %>%
 
 
 #z-scores by swimmer
-w1500f22aves <- w1500f22 %>%
+w1500faves <- w1500f %>%
   filter(lapnum > 1 & lapnum < 30) %>% 
   group_by(Name) %>% summarise(ave_time = mean(split_time),
                                           deviation = sd(split_time),
                                           place = last(Place)) 
 
-w1500f22aves %>% ggplot(aes(x = place, y = deviation)) + 
+w1500faves %>% ggplot(aes(x = place, y = deviation)) + 
   geom_point() +
   geom_smooth(method = "lm", se = F)
 
-w1500f22aves %>% ggplot(aes(x = place, y = ave_time)) + 
+w1500faves %>% ggplot(aes(x = place, y = ave_time)) + 
   geom_point() +
   geom_smooth(method = "lm", se = F)
 
-w1500f22 %>%
+w1500f %>%
   ggplot(aes(x = lapnum, 
              y = split_time, 
              group = Name, 
@@ -378,12 +378,4 @@ df_long %>% filter(Place < 6) %>%
 df %>% ggplot(aes(x = Reaction_Time, y = Place)) + geom_point()
 
 
-
-free200w <- JuniorEast21 %>% 
-  filter(Event == "Women 200 Yard Freestyle")
-JuniorEast21 %>% mutate_at(c(10,40), as.numeric)
-
-
-free200w %>% ggplot(aes(x = as.numeric(Split_50))) + 
-  geom_boxplot()
 
