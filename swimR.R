@@ -12,29 +12,40 @@ library(flextable)
 library(gganimate)
 library(transformr)
 library(ggridges)
-file <- "jreast21.pdf" #change file name for each set of results
+file <- "oly_tri20.pdf" #change file name for each set of results
 
 
 #can import df_long instead of reading pdf - import the csv, then start at line 68
-dfjr21 <- file %>% 
+dfolytri20 <- file %>% 
   SwimmeR::read_results() %>% 
   swim_parse(splits = TRUE, split_length = 50)
 
-#df2 <- df - why?
-cols <- c(3,5,6, 11:41) #might need to adjust
-df[, cols] <- lapply(df[, cols], as.numeric)
+dfjrnats22$competition <- "jrnats22"
 
-df$ave_split <- rowMeans(df[c(11:26)])
-
-hist(df$Split_50)
+olytrifree20 <- dfolytri20 %>% filter(grepl("Women", Event) & grepl("Freestyle", Event))
+jrnatsfree22 <- dfjrnats22 %>% filter(grepl("Women", Event) & grepl("Freestyle", Event))
 
 
+#make long df
+df_long_olytri20 <- gather(olytrifree20, lap, split_time, Split_50:Split_1500, factor_key=TRUE) #make a long dataframe
 
-df_long <- gather(df, lap, split_time, Split_50:Split_1500, factor_key=TRUE) #make a long dataframe
+cols <- c(3,10, 13) #might need to adjust for each df
+
+df_long_olytri20[, cols] <- lapply(df_long_olytri20[, cols], as.numeric)
+#remove unneded columns
+df_long_olytri20 <- df_long_olytri20 %>% select(1:4, 9:13)
+
+df_long <- rbind(df_long_je21, df_long_jnats22, df_long_jwest21, df_long_olytri20)
+
+#filter out relays
+df_long <- df_long[!grepl("Relay", df_long$Event),,drop = FALSE]
+
+#save as csv
+write.csv(df_long, "df_long.csv")
 
 df_long %>% ggplot(aes(x = split_time, y = lap)) + geom_boxplot()
 
-df_long$lapnum <- case_when(df_long$lap == "Split_50" ~ 1,
+df_long$lapnum <- case_when(df_long$lap == "Split_50" ~ 1,  
                             df_long$lap == "Split_100" ~ 2,
                             df_long$lap == "Split_150" ~ 3,
                             df_long$lap == "Split_200" ~ 4,
@@ -63,7 +74,12 @@ df_long$lapnum <- case_when(df_long$lap == "Split_50" ~ 1,
                             df_long$lap == "Split_1350" ~ 27,
                             df_long$lap == "Split_1400" ~ 28,
                             df_long$lap == "Split_1450" ~ 29,
-                            df_long$lap == "Split_1500" ~ 30)
+                            df_long$lap == "Split_1500" ~ 30,
+                            df_long$lap == "Split_1550" ~ 31,
+                            df_long$lap == "Split_1600" ~ 32,
+                            df_long$lap == "Split_1650" ~ 33)
+
+
 
 
 w800f22 <- df_long %>% 
